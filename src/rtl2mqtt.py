@@ -70,18 +70,15 @@ rtl433_proc = subprocess.Popen(
 while True:
     for line in iter(rtl433_proc.stdout.readline, '\n'):
         if "time" in line:
-            mqttc.publish(
-                mqtt_topic, payload=line, qos=mqtt_qos)
-            json_dict = json.loads(line)
-            for item in json_dict:
-                value = json_dict[item]
-                if "model" in item:
-                    subtopic = value
+            if 'id' in line:
+                json_dict = json.loads(line)
+                device_id = json_dict.pop('id')
+                mqttc.publish(
+                    mqtt_topic+"/"+device_id,
+                    payload=json_dict,
+                    qos=mqtt_qos
+                )
+            else:
 
-            for item in json_dict:
-                value = json_dict[item]
-                if "model" not in item:
-                    mqttc.publish(
-                        mqtt_topic+"/"+subtopic+"/"+item,
-                        payload=value,
-                        qos=mqtt_qos)
+                mqttc.publish(
+                    mqtt_topic, payload=line, qos=mqtt_qos)
