@@ -72,7 +72,7 @@ while True:
         if "time" in line:
             if 'id' in line:
                 json_dict = json.loads(line)
-                device_id = json_dict.pop('id')
+                device_id = str(json_dict.pop('id'))
                 mqttc.publish(
                     mqtt_topic+"/"+device_id,
                     payload=json_dict,
