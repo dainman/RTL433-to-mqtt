@@ -75,7 +75,7 @@ while True:
                 device_id = str(json_dict.pop('id'))
                 mqttc.publish(
                     mqtt_topic+"/"+device_id,
-                    payload=json.dump(json_dict),
+                    payload=json.dumps(json_dict),
                     qos=mqtt_qos
                 )
             else:
